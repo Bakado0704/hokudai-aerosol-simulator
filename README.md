@@ -50,7 +50,23 @@ pnpm run build
 - ...
 - `positions_100.csv`
 
-### 4. 計算を実行
+### 4. 環境変数の設定
+
+シミュレーションに必要な環境変数を設定します：
+
+```bash
+source setup.sh
+```
+
+**注意**: このコマンドはLinux/macOS用です。Windowsで実行してうまくいかない場合は、以下のいずれかの方法で対応してください：
+
+- **WSL（推奨）**: Windows Subsystem for Linuxを使用してLinux環境で実行
+- **PowerShell**: `setup.sh`の内容をPowerShellスクリプト（`setup.ps1`）に変換
+- **手動設定**: 環境変数を手動で設定
+
+Windows用の設定ファイルが必要な場合は、ChatGPTやClaudeCodeに`win_setup.sh`の作成を依頼してください。
+
+### 5. 計算を実行
 
 ```bash
 node calculation

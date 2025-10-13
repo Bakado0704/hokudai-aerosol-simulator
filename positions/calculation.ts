@@ -4,6 +4,7 @@ import * as path from 'path';
 import { listParticleCsvFiles } from '@/utils/listParticleFiles';
 import { parseCsvPositions } from '@/utils/parseCsvPositions';
 import { computeCumulativeDistances } from '@/utils/computeCumulativeDistances';
+import { analyzeParticles } from '@/utils/analizeParticles';
 
 const main = () => {
   const dir = __dirname;
@@ -11,16 +12,9 @@ const main = () => {
   const positionsPerFile = allCsvPaths.map((path) =>
     parseCsvPositions({ filePath: path }),
   );
-  const { particleDistanceList } = computeCumulativeDistances(positionsPerFile);
-
-  const result = {
-    perParticle: particleDistanceList.map((d, idx) => ({
-      id: idx,
-      distance: d,
-    })),
-  };
-
-  const outPath = path.join(dir, 'distance_sum.json');
+  const particleUvList = computeCumulativeDistances(positionsPerFile);
+  const result = analyzeParticles(particleUvList);
+  const outPath = path.join(dir, 'result.json');
   fs.writeFileSync(outPath, JSON.stringify(result, null, 2));
 };
 
