@@ -1,7 +1,7 @@
-import { AngleAndUvPower } from '@/types/Vector.types';
+import { AngleAndReceivedUvPower } from '@/types/Vector.types';
 
 export const calculateDeadParticleCount = (
-  angleAndUvPowersList: AngleAndUvPower[][],
+  angleAndUvPowersList: AngleAndReceivedUvPower[][],
 ) => {
   const csvInterval = Number(process.env.CSV_INTERVAL);
   const virusUvDose = Number(process.env.VIRUS_UV_DOSE);
@@ -11,9 +11,9 @@ export const calculateDeadParticleCount = (
   const totalUvPower = new Array(angleAndUvPowersList[0].length).fill(0);
   angleAndUvPowersList.forEach((angleAndUvPowers) => {
     angleAndUvPowers.forEach((angleAndUvPower, index) => {
-      const { angle, uvPower } = angleAndUvPower;
+      const { angle, receivedUvPower } = angleAndUvPower;
       if (angle < 32 || angle > 148) {
-        totalUvPower[index] += uvPower;
+        totalUvPower[index] += receivedUvPower;
       }
     });
   });

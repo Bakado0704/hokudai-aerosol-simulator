@@ -1,18 +1,23 @@
-import { AngleAndUvPower, Vector } from '@/types/Vector.types';
+import {
+  AngleAndReceivedUvPower,
+  ParticlePosition,
+} from '@/types/Vector.types';
 import { calculateDeadParticleCount } from './calculateDeadParticleCount';
 import { getDischargedParticleCount } from './getDischargedParticleCount';
 
 type AnalyzeParticlesProps = {
-  angleAndUvPowersList: AngleAndUvPower[][];
-  lastEarosolPosition: Vector[];
+  angleAndReceivedUvPowersList: AngleAndReceivedUvPower[][];
+  lastEarosolPosition: ParticlePosition[];
 };
 
 export const analyzeParticles = ({
-  angleAndUvPowersList,
+  angleAndReceivedUvPowersList,
   lastEarosolPosition,
 }: AnalyzeParticlesProps) => {
-  const totalParticleCount = angleAndUvPowersList[0].length;
-  const deadParticleCount = calculateDeadParticleCount(angleAndUvPowersList);
+  const totalParticleCount = angleAndReceivedUvPowersList[0].length;
+  const deadParticleCount = calculateDeadParticleCount(
+    angleAndReceivedUvPowersList,
+  );
   const deadParticleRatio = (
     (deadParticleCount / totalParticleCount) *
     100

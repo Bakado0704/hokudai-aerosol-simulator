@@ -1,22 +1,22 @@
-import { Vector } from '@/types/Vector.types';
+import { ParticlePosition, Vector } from '@/types/Vector.types';
 
 type CalculateAngleProps = {
-  earosolPosition: Vector;
-  uvVectorIndex: number;
+  earosolPosition: ParticlePosition;
+  fileIndex: number;
 };
 
 // UVの角度の計算式
 export const calculateAngle = ({
   earosolPosition,
-  uvVectorIndex,
+  fileIndex,
 }: CalculateAngleProps): number => {
   const UVAngle: Vector = [1, 1, 1];
   const UVPosition: Vector = [0, 0, 0];
 
   const L: Vector = [
-    earosolPosition[0] - UVPosition[0],
-    earosolPosition[1] - UVPosition[1],
-    earosolPosition[2] - UVPosition[2],
+    earosolPosition.position.x - UVPosition[0],
+    earosolPosition.position.y - UVPosition[1],
+    earosolPosition.position.z - UVPosition[2],
   ];
 
   // 内積
@@ -29,8 +29,5 @@ export const calculateAngle = ({
   // 角度[rad]
   const theta = Math.acos(dot / (lenA * lenL));
 
-  // 角度[度]
-  const degree = theta * (180 / Math.PI);
-
-  return degree;
+  return theta;
 };

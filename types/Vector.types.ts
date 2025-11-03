@@ -1,5 +1,14 @@
 export type Vector = [number, number, number];
-export type AngleAndUvPower = {
+export type AngleAndReceivedUvPower = {
+  id: string;
   angle: number;
-  uvPower: number;
+  receivedUvPower: number;
+};
+export type ParticlePosition = {
+  id: string;
+  position: {
+    x: number;
+    y: number;
+    z: number;
+  };
 };

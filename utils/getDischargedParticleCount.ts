@@ -1,11 +1,12 @@
-import { Vector } from '@/types/Vector.types';
+import { ParticlePosition, Vector } from '@/types/Vector.types';
 
 export const getDischargedParticleCount = (
-  lastEarosolPosition: Vector[],
+  lastEarosolPosition: ParticlePosition[],
 ): number => {
   let count = 0;
 
-  lastEarosolPosition.forEach(([x, y, z]) => {
+  lastEarosolPosition.forEach((particlePosition) => {
+    const { x, y, z } = particlePosition.position;
     const isInside = x >= 2.3 && x <= 2.7 && y >= 1.3 && y <= 1.7 && z >= 2.29;
 
     if (isInside) count++;
