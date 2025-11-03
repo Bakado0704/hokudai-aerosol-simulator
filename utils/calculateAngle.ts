@@ -1,4 +1,5 @@
 import { ParticlePosition, Vector } from '@/types/Vector.types';
+import { calculateUvAngleAndPosition } from './calculateUvAngleAndPosition';
 
 type CalculateAngleProps = {
   earosolPosition: ParticlePosition;
@@ -10,20 +11,18 @@ export const calculateAngle = ({
   earosolPosition,
   fileIndex,
 }: CalculateAngleProps): number => {
-  const UVAngle: Vector = [1, 1, 1];
-  const UVPosition: Vector = [0, 0, 0];
-
+  const { UvAngle, UvPosition } = calculateUvAngleAndPosition(fileIndex);
   const L: Vector = [
-    earosolPosition.position.x - UVPosition[0],
-    earosolPosition.position.y - UVPosition[1],
-    earosolPosition.position.z - UVPosition[2],
+    earosolPosition.position.x - UvPosition[0],
+    earosolPosition.position.y - UvPosition[1],
+    earosolPosition.position.z - UvPosition[2],
   ];
 
   // 内積
-  const dot = UVAngle[0] * L[0] + UVAngle[1] * L[1] + UVAngle[2] * L[2];
+  const dot = UvAngle[0] * L[0] + UvAngle[1] * L[1] + UvAngle[2] * L[2];
 
   // ベクトルの大きさ
-  const lenA = Math.sqrt(UVAngle[0] ** 2 + UVAngle[1] ** 2 + UVAngle[2] ** 2);
+  const lenA = Math.sqrt(UvAngle[0] ** 2 + UvAngle[1] ** 2 + UvAngle[2] ** 2);
   const lenL = Math.sqrt(L[0] ** 2 + L[1] ** 2 + L[2] ** 2);
 
   // 角度[rad]
