@@ -17,7 +17,7 @@ if [ "$env_choice" = "2" ]; then
 elif [ "$env_choice" = "3" ]; then
   VIRUS="インフルエンザウイルス"
   VIRUS_UV_DOSE="6"
-elseif
+elif [ "$env_choice" = "4" ];then
   VIRUS="アオカビ"
   VIRUS_UV_DOSE="50"
 elif [ "$env_choice" = "5" ]; then
@@ -42,8 +42,16 @@ read csv_interval
 export CSV_INTERVAL="$csv_interval"
 
 echo ""
+echo "排気口に出たエアロゾル粒子を死んだと判定しますか？"
+echo -n "Yesは1、Noは0を入力: "
+read is_dead_threshold
+
+export IS_DEAD_THRESHOLD="$is_dead_threshold"
+
+echo ""
 echo "✅ 環境変数が設定されました"
 echo "VIRUS=$VIRUS"
 echo "VIRUS_UV_DOSE=$VIRUS_UV_DOSE mW/cm²"
 echo "CSV_INTERVAL=$CSV_INTERVAL"
+echo "IS_DEAD_THRESHOLD=$IS_DEAD_THRESHOLD"
 echo ""

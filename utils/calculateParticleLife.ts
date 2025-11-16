@@ -8,10 +8,13 @@ export const calculateParticleLife = (
   const csvInterval = Number(process.env.CSV_INTERVAL);
   const virusUvDose = Number(process.env.VIRUS_UV_DOSE);
 
-  let accumulateDamages: Record<string, number> = {};
+  let instantDamages: Record<string, number> = {};
   let averageParticleLife = virusUvDose;
 
+  // 結果を保存する配列を作成
   const result: { fileIndex: number; percentage: string }[] = [];
+
+  // 初期のRecord型の粒子のダメージ値のオブジェクトを作成(初期値は全て0)
   const lastAngleAndReceivedUvPower =
     angleAndReceivedUvPowersList[angleAndReceivedUvPowersList.length - 1][
       angleAndReceivedUvPowersList[angleAndReceivedUvPowersList.length - 1]
@@ -19,10 +22,9 @@ export const calculateParticleLife = (
     ];
   const lastId = lastAngleAndReceivedUvPower.id;
   const virusCount = Number(lastId) + 1;
-
   for (let i = 0; i < virusCount; i++) {
     const id = String(i);
-    accumulateDamages[id] = 0;
+    instantDamages[id] = 0;
   }
 
   angleAndReceivedUvPowersList.forEach(
@@ -34,25 +36,42 @@ export const calculateParticleLife = (
         const { id, angle, receivedUvPower } = angleAndReceivedUvPower;
         livingParticleIndexArray.push(id);
 
-        accumulateDamages[id] = receivedUvPower * Math.cos(angle) * csvInterval;
+        instantDamages[id] =
+          receivedUvPower * Math.max(0, Math.cos(angle)) * csvInterval;
 
-        // 累積ダメージを超えたらaccmulateDamage[id]をmax値にする
-        if (accumulateDamages[id] > virusUvDose) {
-          accumulateDamages[id] = virusUvDose;
+        // その瞬間におけるダメージは、最大値を超えることはない
+        if (instantDamages[id] > virusUvDose) {
+          instantDamages[id] = virusUvDose;
         }
       });
 
       // 欠損している粒子の累積ダメージを0にする
-      const livingParticleCount = livingParticleIndexArray.length;
+      let livingParticleCount = livingParticleIndexArray.length;
       const missingIndexes = Array.from({ length: virusCount }, (_, i) =>
-        String(i + 1),
-      ).filter((n) => !livingParticleIndexArray.includes(String(n)));
-      missingIndexes.forEach((id) => {
-        accumulateDamages[id] = 0;
-      });
+        String(i),
+      ).filter((id) => !livingParticleIndexArray.includes(id));
+
+      // 欠損した粒子の扱い
+      if (process.env.IS_DEAD_THRESHOLD === '0') {
+        missingIndexes.forEach((id) => {
+          // 排出された粒子は、カウント外とする
+          instantDamages[id] = 0;
+        });
+      } else {
+        missingIndexes.forEach((id) => {
+          if (instantDamages[id] === virusUvDose || instantDamages[id] === 0) {
+            // これ以前排出された粒子は、カウント外とする
+            instantDamages[id] = 0;
+          } else {
+            // 最初に排出された粒子は、死んだとみなし、累積ダメージとして追加する
+            livingParticleCount++;
+            instantDamages[id] = virusUvDose;
+          }
+        });
+      }
 
       // 累積ダメージを合計する
-      Object.entries(accumulateDamages).forEach(([id, damage]) => {
+      Object.entries(instantDamages).forEach(([id, damage]) => {
         accumulateDamage += damage;
       });
 
@@ -61,12 +80,13 @@ export const calculateParticleLife = (
       averageParticleLife -= averageDamage;
       const percentage = ((averageParticleLife * 100) / virusUvDose).toFixed(3);
 
+      // 結果を出力
       result.push({ fileIndex, percentage });
       console.log(
         `${fileIndex}秒後の粒子の部屋に残っている粒子の平均体力: ${percentage}%`,
       );
       console.log(
-        `${fileIndex}秒後の粒子の部屋に残っている粒子数: ${livingParticleCount}`,
+        `${fileIndex}秒後の粒子の部屋に残っている粒子数: ${livingParticleIndexArray.length}`,
       );
     },
   );
