@@ -1,6 +1,3 @@
-import * as fs from 'fs';
-import * as path from 'path';
-
 import { listParticleCsvFiles } from '@/utils/listParticleFiles';
 import { parseCsvPositions } from '@/utils/parseCsvPositions';
 import { getAngleAndReceivedUvPowerPerFile } from '@/utils/getAngleAndReceivedUvPowerPerFile';
