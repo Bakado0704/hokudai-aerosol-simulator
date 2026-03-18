@@ -1,7 +1,6 @@
 {
   "devDependencies": {
     "prettier": "^3.6.2",
-    "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
   },
